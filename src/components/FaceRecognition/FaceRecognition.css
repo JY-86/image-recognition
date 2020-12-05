@@ -1,0 +1,13 @@
+#face-image {
+    width: 50vh;
+    height: auto;
+    border: 3px solid black;
+}
+
+.bounding-box {
+    position: absolute;
+    display: flex;
+    border: 3px rgb(27, 69, 255) solid;
+    justify-content: center;
+    cursor: pointer;
+}
