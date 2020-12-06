@@ -62,8 +62,7 @@ class App extends React.Component {
         bottom: (1-box.bottom_row) * height
       };
     });
-    
-    this.setState({box: boundingBoxes});
+    this.setState({boxes: boundingBoxes});
   }
 
   onRouteChange = (route) => {
@@ -99,7 +98,7 @@ class App extends React.Component {
             <div style={{height:'50px'}}></div>
             <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
           </div>
-          <FaceRecognition imgUrl={this.state.url} boundingBoxes={this.state.box}/>
+          <FaceRecognition imgUrl={this.state.url} boundingBoxes={this.state.boxes}/>
         </div>
         );
 
