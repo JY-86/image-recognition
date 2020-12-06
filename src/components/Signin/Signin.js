@@ -1,7 +1,7 @@
 import React from 'react';
 import 'tachyons';
 
-const Signin = () => {
+const Signin = ({ onRouteChange }) => {
     return (
         <main className="pa4 black-80 tc shadow-5 br2 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 center">
             <div className="measure center">
@@ -17,10 +17,11 @@ const Signin = () => {
                     </div>
                 </fieldset>
                 <div className="">
-                    <input className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib bw" type="submit" value="Sign in"/>
+                    <input className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib bw" type="submit" value="Sign in" 
+                    onClick={() => onRouteChange('home')}/>
                 </div>
                 <div className="lh-copy mt3">
-                    <p href="#0" className="f6 link dim black db pointer">Register</p>
+                    <p href="#0" className="f6 link dim black db pointer" onClick={() => onRouteChange('register')}>Register</p>
                 </div>
             </div>
         </main>

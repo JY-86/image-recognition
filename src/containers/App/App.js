@@ -64,17 +64,29 @@ class App extends React.Component {
     this.setState({box: pixelBox});
   }
 
+  onRouteChange = (route) => {
+    let state = {route: route};
+    if (route=== 'signout') {
+      state.signedIn = false;
+      state.route = 'signin'; // redirect
+    }
+    else if (route === 'home') {
+      state.signedIn = true;
+    }
+    this.setState(state);
+  }
+
   getRouteJSX() {
     const { route } = this.state;
     switch (route) {
       case 'signin':
         return (
-          <Signin></Signin>
+          <Signin onRouteChange={this.onRouteChange}></Signin>
         );
       
       case 'register':
         return (
-          <Register></Register>
+          <Register onRouteChange={this.onRouteChange}></Register>
         );
 
       case 'home': // home
@@ -100,7 +112,7 @@ class App extends React.Component {
         <div style={{height:'100%'}}>
           <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}} className='pl4 pr4 pt3'>
             {this.state.route === 'home' ? <Logo/> : <div/>}
-            <Navigation signedIn={this.state.signedIn}/>
+            <Navigation signedIn={this.state.signedIn} onRouteChange={this.onRouteChange}/>
           </div>
           {this.getRouteJSX()}
         </div>
