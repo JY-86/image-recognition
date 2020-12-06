@@ -30,7 +30,7 @@ class App extends React.Component {
     this.state = {
       url: '',
       input: '',
-      box: {},
+      boxes: [],
       route: 'signin',
       signedIn: false
     };
@@ -43,25 +43,26 @@ class App extends React.Component {
   onSubmit = (e) => {
     this.setState({url: this.state.input}, () => {
       app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.url)
-      .then(response => this.setBoundingBox(response))
+      .then(response => this.setBoundingBoxes(response))
       .catch(err => console.log(err));
     });
   }
 
-  setBoundingBox = (data) => {
-    let boundingBox = data.outputs[0].data.regions[0].region_info.bounding_box;
-
+  setBoundingBoxes = (data) => {
     let img = document.querySelector("#face-image");
     let width = Number(img.width);
     let height = Number(img.height);
-    let pixelBox = {
-      left: boundingBox.left_col * width,
-      right: (1-boundingBox.right_col) * width,
-      top: boundingBox.top_row * height,
-      bottom: (1-boundingBox.bottom_row) * height
-    };
 
-    this.setState({box: pixelBox});
+    let boundingBoxes = data.outputs[0].data.regions.map(i => {
+      let box = i.region_info.bounding_box;
+      return {
+        left: box.left_col * width,
+        right: (1-box.right_col) * width,
+        top: box.top_row * height,
+        bottom: (1-box.bottom_row) * height
+      };
+    });
+    this.setState({boxes: boundingBoxes});
   }
 
   onRouteChange = (route) => {
@@ -97,7 +98,7 @@ class App extends React.Component {
             <div style={{height:'50px'}}></div>
             <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
           </div>
-          <FaceRecognition imgUrl={this.state.url} boundingBox={this.state.box}/>
+          <FaceRecognition imgUrl={this.state.url} boundingBoxes={this.state.boxes}/>
         </div>
         );
 
