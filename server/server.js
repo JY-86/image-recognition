@@ -1,6 +1,8 @@
 const http = require('http');
 var https = require('https');
 const express = require('express');
+const cors = require('cors');
+const bcrypt = require('bcrypt');
 
 const mockDb = {
     users: [
@@ -24,42 +26,54 @@ const mockDb = {
 }
 
 function findUser(id) {
-    
+    throw Error("Not Implemented");
+}
+
+async function getHash(password) {
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(password, saltRounds, callback);
+    return hash;
 }
 
 const app = express();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-
+app.use(express.text());
+app.use(cors());
 app.get("/", (req, res) => {
     res.send("server running");
 });
 
-app.post("/signin", (req, res) => {
+app.post("/signin", async (req, res) => {
     let { email, password } = req.body;
+    console.log(email, password);
+
+    //compare passwords
     mockDb.users.forEach(x => {
-        if (x.email === email && x.password === password) {
-            res.send("true");
+        if (x.email === email && bcrypt.compare(password, x.password)) {
+            console.log(x);
+            res.json("true");
             return;
         }
     })
-    res.status(400).send("false");
+    res.json("false");
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
     // check if email already in db
     let {name, email, password} = req.body;
     let resObj = {
         valid: false,
         user: {}
     }
+    let hashedPassword = await getHash(password);
     if (mockDb.users.filter(x => x.email === email).length === 0) { // valid
         // register a new user
         mockDb.users.push({
             name: name,
             email: email,
-            password: password,
+            password: hashedPassword,
             entries: 0,
             id: 3,
             joined: new Date()
@@ -70,7 +84,6 @@ app.post("/register", (req, res) => {
         resObj.user = mockDb.users[mockDb.users.length - 1];
     }
     res.json(resObj);
-
 });
 
 app.get("/profile/:id", (req, res) => {
@@ -85,15 +98,20 @@ app.get("/profile/:id", (req, res) => {
 });
 
 app.put("/image", (req, res) => {
-    let {id} = req.body;
+    let id = parseInt(req.body);
 
+    if (id === undefined) {
+        res.send("Update failed");
+        return;
+    }
+    // find user with id
+    let user = mockDb.users.find(x => x.id === id);
+    user.entries++;
+    res.send(user.entries.toString());
 });
 
+app.all("*", (req, res) => {
+    res.status(404).send("Route not found");
+})
 http.createServer(app).listen(80, () => console.log("app running on port 80"));
-https.createServer(app).listen(443, () => console.log("app running on port 443"));
-
-// / --> server running DONE
-// /signin --> success/fail DONE
-// /register --> {valid:t/f user:user} DONE
-// /profile/:id --> user
-// /image --> image count
+//https.createServer(app).listen(443, () => console.log("app running on port 443"));
