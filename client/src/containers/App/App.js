@@ -32,18 +32,43 @@ class App extends React.Component {
       input: '',
       boxes: [],
       route: 'signin',
-      signedIn: false
+      signedIn: false,
+      user: {}
     };
+  }
+
+  loadUser = user => {
+    console.log(user);
+    this.setState({user: user});
+    console.log(this.state.user.entries);
   }
 
   onInputChange = (e) => {
     this.setState({input: e.target.value});
   }
 
-  onSubmit = (e) => {
+  onPictureSubmit = (e) => {
     this.setState({url: this.state.input}, () => {
       app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.url)
       .then(response => this.setBoundingBoxes(response))
+      .then(
+        fetch("/image", {
+          method: 'PUT',
+          headers: {
+            "Content-Type": "text/plain"
+          },
+          body: this.state.user.id.toString()
+        })
+        .then(res => res.json())
+        .then(entries => {
+          // update user state to increase entries
+          this.setState({user: {
+            ...this.state.user,
+            entries: entries
+          }});
+        })
+        .catch(err => console.log("A server error occurred: " + err))
+      )
       .catch(err => console.log(err));
     });
   }
@@ -82,21 +107,21 @@ class App extends React.Component {
     switch (route) {
       case 'signin':
         return (
-          <Signin onRouteChange={this.onRouteChange}></Signin>
+          <Signin onRouteChange={this.onRouteChange} loadUser={this.loadUser}></Signin>
         );
       
       case 'register':
         return (
-          <Register onRouteChange={this.onRouteChange}></Register>
+          <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}></Register>
         );
 
       case 'home': // home
         return (
         <div>
           <div style={{display:'flex', alignItems:'center', marginTop:'15vh', flexDirection: 'column'}}>
-            <Rank/>
+            <Rank name={this.state.user.name} rank={this.state.user.entries}/>
             <div style={{height:'50px'}}></div>
-            <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
+            <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onPictureSubmit}/>
           </div>
           <FaceRecognition imgUrl={this.state.url} boundingBoxes={this.state.boxes}/>
         </div>

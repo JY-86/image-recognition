@@ -1,14 +1,15 @@
 import React from 'react';
 import 'tachyons';
 
-const Rank = () => {
+const Rank = (props) => {
+    let {name, rank} = props;
     return (
         <div className="tc">
             <div className="white f3">
-                USER, your current rank is
+                {name}, your current entry count is
             </div>
             <div className="white f1">
-                #RANK
+                #{rank}
             </div>
         </div>
         
