@@ -37,6 +37,7 @@ class Signin extends React.Component {
             mode:"cors"
         });        
         let user = await response.json();
+        console.log(user);
         if (user.id !== undefined) {
             this.props.loadUser(user);
             this.props.onRouteChange('home')

@@ -55,7 +55,7 @@ class Register extends React.Component {
             output = <p className="red b">A user with that email already exists. Please select a different email</p>
         }
         else if (this.state.serverError) {
-            output = <p className="red b">There was an internal server error</p>
+            output = <p className="red b">There was an server error. Please try again later</p>
         }
         return output;
     }

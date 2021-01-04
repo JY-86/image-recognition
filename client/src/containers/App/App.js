@@ -11,6 +11,7 @@ import Rank from '../../components/Rank/Rank';
 import FaceRecognition from '../../components/FaceRecognition/FaceRecognition';
 import Signin from '../../components/Signin/Signin';
 import Register from '../../components/Register/Register';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
 const particleParams = {
   particles: {
@@ -71,6 +72,7 @@ class App extends React.Component {
       )
       .catch(err => console.log(err));
     });
+    //console.log(this.state.toString());
   }
 
   setBoundingBoxes = (data) => {
@@ -107,19 +109,23 @@ class App extends React.Component {
     switch (route) {
       case 'signin':
         return (
-          <Signin onRouteChange={this.onRouteChange} loadUser={this.loadUser}></Signin>
+          <ErrorBoundary>
+            <Signin onRouteChange={this.onRouteChange} loadUser={this.loadUser}></Signin>
+          </ErrorBoundary>
         );
       
       case 'register':
         return (
-          <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}></Register>
+          <ErrorBoundary>
+            <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}></Register>
+          </ErrorBoundary>
         );
 
       case 'home': // home
         return (
         <div>
           <div style={{display:'flex', alignItems:'center', marginTop:'15vh', flexDirection: 'column'}}>
-            <Rank name={this.state.user.name} rank={this.state.user.entries}/>
+            <Rank name={this.state.user.username} rank={this.state.user.entries}/>
             <div style={{height:'50px'}}></div>
             <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onPictureSubmit}/>
           </div>
