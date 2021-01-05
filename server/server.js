@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql');
+const path = require('path');
 
 // database connection initialisation
 var connection = mysql.createConnection({
@@ -51,7 +52,7 @@ app.use(express.json());
 app.use(express.text());
 app.use(cors());
 
-
+//answer api calls
 app.get("/", (req, res) => {
     res.send("server running");
 });
@@ -167,5 +168,6 @@ app.use(function (err, req, res, next) {
     res.status(500).send('Internal server error')
 })
 
-http.createServer(app).listen(80, () => console.log("app running on port 80"));
+let port = process.env.PORT ? process.env.PORT : 80;
+http.createServer(app).listen(port, () => console.log(`app running on port ${port}`));
 //https.createServer(app).listen(443, () => console.log("app running on port 443"));
