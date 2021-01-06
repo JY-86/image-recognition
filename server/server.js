@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt');
 const mysql = require('mysql');
 const path = require('path');
 const e = require('express');
-const path = require('path');
 
 // database connection initialisation
 var connection;
