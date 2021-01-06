@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const mysql = require('mysql');
 const path = require('path');
 const e = require('express');
+const path = require('path');
 
 // database connection initialisation
 var connection;
@@ -16,7 +17,7 @@ if (process.env.NODE_ENV === 'production') {
         console.error("database url not defined");
     }
     else {
-        const urlData = require('./utils/cleardb-parser').parse(clearDbUrl);
+        const urlData = require(path.join(__dirname, 'utils', 'cleardb-parser')).parse(clearDbUrl);
         console.log(urlData);
     
         connection = mysql.createConnection({
