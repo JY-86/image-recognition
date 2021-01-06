@@ -7,6 +7,8 @@ const mysql = require('mysql');
 const path = require('path');
 const e = require('express');
 
+const fs = require('fs');
+
 // database connection initialisation
 var connection;
 if (process.env.NODE_ENV === 'production') {
@@ -16,7 +18,18 @@ if (process.env.NODE_ENV === 'production') {
         console.error("database url not defined");
     }
     else {
-        const urlData = require(path.join(__dirname, 'utils', 'cleardb-parser')).parse(clearDbUrl);
+        console.log("debug:", __dirname);
+        fs.readdirSync(".").forEach(file => {
+            console.log("debug1: ", file);
+        });
+        fs.readdirSync(__dirname).forEach(file => {
+            console.log("debug2: ", file);
+        });
+        fs.readdirSync("./utils").forEach(file => {
+            console.log("debug3: ", file);
+        });
+
+        const urlData = require(path.join(__dirname, 'utils', 'cleardb-parser.js')).parse(clearDbUrl);
         console.log(urlData);
     
         connection = mysql.createConnection({
