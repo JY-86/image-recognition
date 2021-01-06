@@ -5,15 +5,41 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql');
 const path = require('path');
+const e = require('express');
 
 // database connection initialisation
-var connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "sq86",
-    database: "imagerecognitiondb",
-    multipleStatements: true
-});
+var connection;
+if (process.env.NODE_ENV === 'production') {
+    const clearDbUrl = process.env.CLEARDB_DATABASE_URL;
+
+    if (!clearDbUrl) {
+        console.error("database url not defined");
+    }
+    else {
+        const urlData = require('./utils/cleardb-parser').parse(clearDbUrl);
+        console.log(urlData);
+    
+        connection = mysql.createConnection({
+            host: urlData.host,
+            user: urlData.username,
+            password: urlData.password,
+            database: urlData.databaseName,
+            multipleStatements: true
+        });
+    }
+}
+else {
+    connection = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "sq86",
+        database: "imagerecognitiondb",
+        multipleStatements: true
+    });
+}
+
+
+
 
 connection.connect((err) => {
     if (err) {
