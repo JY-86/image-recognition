@@ -27,6 +27,7 @@ class Signin extends React.Component {
     }
 
     submitLogin = async () => {
+        await alert(url + "  ", process.env.API_URL);
         let response = await fetch(url + "/signin", {
             method: "POST",
             headers: {

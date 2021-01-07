@@ -1,1 +1,1 @@
-export default (process.env.API_URL ? process.env.API_URL : "localhost:80")
+export default (process.env.API_URL !== undefined ? process.env.API_URL : "localhost:80")
