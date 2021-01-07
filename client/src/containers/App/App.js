@@ -13,6 +13,8 @@ import Signin from '../../components/Signin/Signin';
 import Register from '../../components/Register/Register';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
+import url from '../../utils/backend-url-resolver';
+
 const particleParams = {
   particles: {
     number: {
@@ -53,7 +55,7 @@ class App extends React.Component {
       app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.url)
       .then(response => this.setBoundingBoxes(response))
       .then(
-        fetch("/image", {
+        fetch(url + "/image", {
           method: 'PUT',
           headers: {
             "Content-Type": "text/plain"

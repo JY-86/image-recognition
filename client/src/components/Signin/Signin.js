@@ -1,6 +1,8 @@
 import React from 'react';
 import 'tachyons';
 
+import url from '../../utils/backend-url-resolver';
+
 class Signin extends React.Component {
     constructor(props) {
         super(props);
@@ -25,7 +27,7 @@ class Signin extends React.Component {
     }
 
     submitLogin = async () => {
-        let response = await fetch("/signin", {
+        let response = await fetch(url + "/signin", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

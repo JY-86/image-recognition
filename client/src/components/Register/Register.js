@@ -1,6 +1,8 @@
 import React from 'react';
 import 'tachyons';
 
+import url from '../../utils/backend-url-resolver';
+
 class Register extends React.Component {
     constructor(props) {
         super(props);
@@ -21,7 +23,7 @@ class Register extends React.Component {
 
     onSubmit = async () => {
         // register user with backend api
-        let res = await fetch("/register", {
+        let res = await fetch(url + "/register", {
             method: 'post',
             headers: {
                 "Content-Type": "application/json"
